@@ -1,0 +1,45 @@
+// Celda de la grilla (1x1). Origen (0,0) arriba a la izquierda.
+// Eje X = "a" = frente/fondo del escenario.
+// Eje Y = "b" = lados del escenario.
+export interface Celda {
+  x: number;
+  y: number;
+}
+
+// Un chapón ocupa un rectángulo de celdas: desde (x,y) hasta (x+ancho, y+alto).
+// ancho/alto están en CELDAS (1 o 2), nunca ambos 2 a la vez (no existe chapón 2x2).
+export interface Chapon {
+  x: number;
+  y: number;
+  ancho: 1 | 2;
+  alto: 1 | 2;
+}
+
+// Pata: vértice en la grilla de esquinas (no de celdas).
+export interface Pata {
+  x: number;
+  y: number;
+}
+
+// Lado: arista entre dos patas, de longitud 1 o 2 metros.
+export interface Lado {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  longitud: 1 | 2;
+}
+
+export interface ResultadoCalculo {
+  chapones2x1: number;
+  chapones1x1: number;
+  patas: number;
+  lados2m: number;
+  lados1m: number;
+  // Detalle geométrico, útil para dibujar el resultado o depurar:
+  detalle: {
+    chapones: Chapon[];
+    patas: Pata[];
+    lados: Lado[];
+  };
+}
