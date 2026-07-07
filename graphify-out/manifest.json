@@ -1,0 +1,252 @@
+{
+  "/home/agus/Documents/work/tarimApp/tarimApp/.claude/settings.json": {
+    "mtime": 1783375781.3244312,
+    "ast_hash": "dc580fca35a0e98ed20777ede5e545a1",
+    "semantic_hash": "dc580fca35a0e98ed20777ede5e545a1"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/.vscode/extensions.json": {
+    "mtime": 1783375736.7678518,
+    "ast_hash": "b2354ba0225f5689d13651ec0fac0de0",
+    "semantic_hash": "b2354ba0225f5689d13651ec0fac0de0"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/.vscode/settings.json": {
+    "mtime": 1783375736.769481,
+    "ast_hash": "6b9302c1f72c315e90233c7539c48c9f",
+    "semantic_hash": "6b9302c1f72c315e90233c7539c48c9f"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/app.json": {
+    "mtime": 1783375736.7900524,
+    "ast_hash": "07e78395c1463116cf892ec758e9708d",
+    "semantic_hash": "07e78395c1463116cf892ec758e9708d"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/expo.icon/icon.json": {
+    "mtime": 1783375736.7681162,
+    "ast_hash": "35cb915a0bebbebbe69cf7815e174462",
+    "semantic_hash": "35cb915a0bebbebbe69cf7815e174462"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/package.json": {
+    "mtime": 1783375736.7904255,
+    "ast_hash": "0e7b08ed4c33b1c9ccd67dc503e4eac8",
+    "semantic_hash": "0e7b08ed4c33b1c9ccd67dc503e4eac8"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/scripts/reset-project.js": {
+    "mtime": 1783375736.766353,
+    "ast_hash": "ca9d75cf60f51e7a2d67fd08ddfb8275",
+    "semantic_hash": "ca9d75cf60f51e7a2d67fd08ddfb8275"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/app/_layout.tsx": {
+    "mtime": 1783375736.7797875,
+    "ast_hash": "85c10ae1f47d901b36563b21c1cacc63",
+    "semantic_hash": "85c10ae1f47d901b36563b21c1cacc63"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/app/explore.tsx": {
+    "mtime": 1783375736.780647,
+    "ast_hash": "42adf91e47cfe6b5d4ede54a35db24d0",
+    "semantic_hash": "42adf91e47cfe6b5d4ede54a35db24d0"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/app/index.tsx": {
+    "mtime": 1783375736.780968,
+    "ast_hash": "c6dba393a45b6d4e24d2f0bb62d6c0bf",
+    "semantic_hash": "c6dba393a45b6d4e24d2f0bb62d6c0bf"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/animated-icon.tsx": {
+    "mtime": 1783375736.7797875,
+    "ast_hash": "46cea5b4aaa994fa61f8a3d1574b2ff8",
+    "semantic_hash": "46cea5b4aaa994fa61f8a3d1574b2ff8"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/animated-icon.web.tsx": {
+    "mtime": 1783375736.7802854,
+    "ast_hash": "2defa175163e104a6e2232436fa77e30",
+    "semantic_hash": "2defa175163e104a6e2232436fa77e30"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/app-tabs.tsx": {
+    "mtime": 1783375736.7803986,
+    "ast_hash": "7f9ddbb00991d090e67f4eeff23f89e8",
+    "semantic_hash": "7f9ddbb00991d090e67f4eeff23f89e8"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/app-tabs.web.tsx": {
+    "mtime": 1783375736.7804956,
+    "ast_hash": "d197b6fde1ead811d986e454f2e27064",
+    "semantic_hash": "d197b6fde1ead811d986e454f2e27064"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/external-link.tsx": {
+    "mtime": 1783375736.7808666,
+    "ast_hash": "a71bdc8e0bd55812a1e97662ade442d1",
+    "semantic_hash": "a71bdc8e0bd55812a1e97662ade442d1"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/hint-row.tsx": {
+    "mtime": 1783375736.780968,
+    "ast_hash": "1ac80baf6b0a5c3d8c1ea371d5a0dbc5",
+    "semantic_hash": "1ac80baf6b0a5c3d8c1ea371d5a0dbc5"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/themed-text.tsx": {
+    "mtime": 1783375736.7811549,
+    "ast_hash": "41869b896e1e9f3472f5c2183af58918",
+    "semantic_hash": "41869b896e1e9f3472f5c2183af58918"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/themed-view.tsx": {
+    "mtime": 1783375736.7812414,
+    "ast_hash": "f935dbbcf5a5067a417ea7b329727653",
+    "semantic_hash": "f935dbbcf5a5067a417ea7b329727653"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/ui/collapsible.tsx": {
+    "mtime": 1783375736.780647,
+    "ast_hash": "24105f00e6631a1cb1daeaef9d4aa808",
+    "semantic_hash": "24105f00e6631a1cb1daeaef9d4aa808"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/components/web-badge.tsx": {
+    "mtime": 1783375736.7813253,
+    "ast_hash": "6d02b3c146c2ed6a3d3b7b8764e17602",
+    "semantic_hash": "6d02b3c146c2ed6a3d3b7b8764e17602"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/constants/theme.ts": {
+    "mtime": 1783375736.7794323,
+    "ast_hash": "9507bd7aa3ee042af2ad8a99ebbaa8b6",
+    "semantic_hash": "9507bd7aa3ee042af2ad8a99ebbaa8b6"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/hooks/use-color-scheme.ts": {
+    "mtime": 1783375736.7794323,
+    "ast_hash": "6f3444fcb9c7013a839a7832be518831",
+    "semantic_hash": "6f3444fcb9c7013a839a7832be518831"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/hooks/use-color-scheme.web.ts": {
+    "mtime": 1783375736.779699,
+    "ast_hash": "071fbb9a1a05ffb8af4b7d3b1ffa72d6",
+    "semantic_hash": "071fbb9a1a05ffb8af4b7d3b1ffa72d6"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/src/hooks/use-theme.ts": {
+    "mtime": 1783375736.7797875,
+    "ast_hash": "e058af4f5801bcaa97dad62f12085a27",
+    "semantic_hash": "e058af4f5801bcaa97dad62f12085a27"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/tsconfig.json": {
+    "mtime": 1783375736.770231,
+    "ast_hash": "6794be22dd9dd00003515895d3b4ff06",
+    "semantic_hash": "6794be22dd9dd00003515895d3b4ff06"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/AGENTS.md": {
+    "mtime": 1783375781.3233113,
+    "ast_hash": "963888ec05f17b13375386f058dd621e",
+    "semantic_hash": "963888ec05f17b13375386f058dd621e"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/CLAUDE.md": {
+    "mtime": 1783375781.3244312,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": "5c27369b226fcf2be8a6cfe52224e767"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/README.md": {
+    "mtime": 1783375736.7705925,
+    "ast_hash": "db37e01139db6cec80a338779325d5ae",
+    "semantic_hash": "db37e01139db6cec80a338779325d5ae"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/expo.icon/Assets/expo-symbol 2.svg": {
+    "mtime": 1783375736.779275,
+    "ast_hash": "6979b664c1ce82c10426a051082412a7",
+    "semantic_hash": "6979b664c1ce82c10426a051082412a7"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/expo.icon/Assets/grid.png": {
+    "mtime": 1783375736.773817,
+    "ast_hash": "37cdeda9d1af5d7432716d9671b098da",
+    "semantic_hash": "37cdeda9d1af5d7432716d9671b098da"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/android-icon-background.png": {
+    "mtime": 1783375736.7710907,
+    "ast_hash": "2d65569cc0e2afdcea0af9f9902d4173",
+    "semantic_hash": "2d65569cc0e2afdcea0af9f9902d4173"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/android-icon-foreground.png": {
+    "mtime": 1783375736.7715025,
+    "ast_hash": "72e71a9c846c6aa4ae32476641a00e18",
+    "semantic_hash": "72e71a9c846c6aa4ae32476641a00e18"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/android-icon-monochrome.png": {
+    "mtime": 1783375736.7720153,
+    "ast_hash": "1e097dab989759fc0b69440092ca22cd",
+    "semantic_hash": "1e097dab989759fc0b69440092ca22cd"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/expo-badge-white.png": {
+    "mtime": 1783375736.7732036,
+    "ast_hash": "02efb8472f161bcf8afc8c8489a28fca",
+    "semantic_hash": "02efb8472f161bcf8afc8c8489a28fca"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/expo-badge.png": {
+    "mtime": 1783375736.7734776,
+    "ast_hash": "6b0da8ec880685d1bd053c0f5ea9d09d",
+    "semantic_hash": "6b0da8ec880685d1bd053c0f5ea9d09d"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/expo-logo.png": {
+    "mtime": 1783375736.7736819,
+    "ast_hash": "5ee5db91d59518c45ebcc99a2f5afc57",
+    "semantic_hash": "5ee5db91d59518c45ebcc99a2f5afc57"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/favicon.png": {
+    "mtime": 1783375736.773817,
+    "ast_hash": "d9f444efbdfbe7931aa93beada07318a",
+    "semantic_hash": "d9f444efbdfbe7931aa93beada07318a"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/icon.png": {
+    "mtime": 1783375736.7761164,
+    "ast_hash": "8d892ef03dbd43e8d899c1d605ad42df",
+    "semantic_hash": "8d892ef03dbd43e8d899c1d605ad42df"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/logo-glow.png": {
+    "mtime": 1783375736.7771757,
+    "ast_hash": "dbca075a49dc45e550c5d2e3e9601039",
+    "semantic_hash": "dbca075a49dc45e550c5d2e3e9601039"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/react-logo.png": {
+    "mtime": 1783375736.7779627,
+    "ast_hash": "695d5a1c6f29a689130f3aaa573aec6e",
+    "semantic_hash": "695d5a1c6f29a689130f3aaa573aec6e"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/react-logo@2x.png": {
+    "mtime": 1783375736.7780967,
+    "ast_hash": "b507e7f2c91ebc8fe24dee79ccb3b600",
+    "semantic_hash": "b507e7f2c91ebc8fe24dee79ccb3b600"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/react-logo@3x.png": {
+    "mtime": 1783375736.7784414,
+    "ast_hash": "8a4d0e5b845044e56e3b2df627d01cfd",
+    "semantic_hash": "8a4d0e5b845044e56e3b2df627d01cfd"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/splash-icon.png": {
+    "mtime": 1783375736.7786434,
+    "ast_hash": "5ee5db91d59518c45ebcc99a2f5afc57",
+    "semantic_hash": "5ee5db91d59518c45ebcc99a2f5afc57"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tabIcons/explore.png": {
+    "mtime": 1783375736.7727401,
+    "ast_hash": "8409922f7d5c981001e3c9b25e4bfae5",
+    "semantic_hash": "8409922f7d5c981001e3c9b25e4bfae5"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tabIcons/explore@2x.png": {
+    "mtime": 1783375736.7730923,
+    "ast_hash": "dd40200ba8e8d98061578292d6b73791",
+    "semantic_hash": "dd40200ba8e8d98061578292d6b73791"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tabIcons/explore@3x.png": {
+    "mtime": 1783375736.7732036,
+    "ast_hash": "c4278d79298bb11a8b0e68ed3e40da9e",
+    "semantic_hash": "c4278d79298bb11a8b0e68ed3e40da9e"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tabIcons/home.png": {
+    "mtime": 1783375736.773817,
+    "ast_hash": "eeb5de2ac12ace75b31dfda235208956",
+    "semantic_hash": "eeb5de2ac12ace75b31dfda235208956"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tabIcons/home@2x.png": {
+    "mtime": 1783375736.774402,
+    "ast_hash": "456346cfb0b82cc0f39e921e05d082d9",
+    "semantic_hash": "456346cfb0b82cc0f39e921e05d082d9"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tabIcons/home@3x.png": {
+    "mtime": 1783375736.7745054,
+    "ast_hash": "5d86e963002b3664ab81c128c838559d",
+    "semantic_hash": "5d86e963002b3664ab81c128c838559d"
+  },
+  "/home/agus/Documents/work/tarimApp/tarimApp/assets/images/tutorial-web.png": {
+    "mtime": 1783375736.7787764,
+    "ast_hash": "c62d22797f3002396754d8cc55b0ae1a",
+    "semantic_hash": "c62d22797f3002396754d8cc55b0ae1a"
+  }
+}
