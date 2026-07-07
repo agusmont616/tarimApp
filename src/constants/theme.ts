@@ -7,21 +7,20 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+// La app siempre usa el tema oscuro (fondo gris muy oscuro), sin importar
+// el esquema de color del sistema operativo. Por eso 'light' y 'dark'
+// comparten los mismos valores.
+const TEMA_OSCURO = {
+  text: '#ffffff',
+  background: '#121212',
+  backgroundElement: '#212225',
+  backgroundSelected: '#2E3135',
+  textSecondary: '#B0B4BA',
+} as const;
+
 export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
+  light: TEMA_OSCURO,
+  dark: TEMA_OSCURO,
 } as const;
 
 // Colores de marca de la aplicación: negro como principal, naranja como secundario.

@@ -6,9 +6,11 @@ import {
     View,
 } from 'react-native';
 import { BrandColors } from '../constants/theme';
+import { Chapon } from '../logic/tipos';
 
 const COLUMNAS = 12; // eje X = "a" = frente/fondo
 const FILAS = 8; // eje Y = "b" = lados
+const ESPACIO_ENTRE_CHAPONES = 2;
 
 interface Punto {
   x: number;
@@ -19,6 +21,9 @@ interface GrillaEscenarioProps {
   seleccion: Set<string>;
   onCambiarSeleccion: (seleccion: Set<string>) => void;
   tamanoCelda?: number;
+  // Tiling resultante del cálculo: si viene presente, se dibuja como bloques
+  // (uno por chapón) en vez de pintar cada celda seleccionada por separado.
+  chapones?: Chapon[];
 }
 
 export function claveCelda(x: number, y: number): string {
@@ -29,10 +34,20 @@ export default function GrillaEscenario({
   seleccion,
   onCambiarSeleccion,
   tamanoCelda = 28,
+  chapones,
 }: GrillaEscenarioProps) {
   const contenedorRef = useRef<View>(null);
   const origenPagina = useRef<Punto>({ x: 0, y: 0 });
   const [arrastre, setArrastre] = useState<{ inicio: Punto; actual: Punto } | null>(null);
+
+  // El PanResponder se crea una sola vez (useRef), así que sus callbacks deben
+  // leer el estado más reciente a través de refs en vez de por clausura directa.
+  const arrastreRef = useRef(arrastre);
+  arrastreRef.current = arrastre;
+  const seleccionRef = useRef(seleccion);
+  seleccionRef.current = seleccion;
+  const onCambiarSeleccionRef = useRef(onCambiarSeleccion);
+  onCambiarSeleccionRef.current = onCambiarSeleccion;
 
   const coordenadaACelda = useCallback(
     (pageX: number, pageY: number): Punto => {
@@ -61,34 +76,34 @@ export default function GrillaEscenario({
         setArrastre((previo) => (previo ? { ...previo, actual: celda } : { inicio: celda, actual: celda }));
       },
       onPanResponderRelease: () => {
-        setArrastre((previo) => {
-          if (!previo) return null;
-          const { inicio, actual } = previo;
-          const esTap = inicio.x === actual.x && inicio.y === actual.y;
-          const nuevaSeleccion = new Set(seleccion);
+        const previo = arrastreRef.current;
+        if (!previo) return;
 
-          if (esTap) {
-            const k = claveCelda(inicio.x, inicio.y);
-            if (nuevaSeleccion.has(k)) {
-              nuevaSeleccion.delete(k);
-            } else {
-              nuevaSeleccion.add(k);
-            }
+        const { inicio, actual } = previo;
+        const esTap = inicio.x === actual.x && inicio.y === actual.y;
+        const nuevaSeleccion = new Set(seleccionRef.current);
+
+        if (esTap) {
+          const k = claveCelda(inicio.x, inicio.y);
+          if (nuevaSeleccion.has(k)) {
+            nuevaSeleccion.delete(k);
           } else {
-            const minX = Math.min(inicio.x, actual.x);
-            const maxX = Math.max(inicio.x, actual.x);
-            const minY = Math.min(inicio.y, actual.y);
-            const maxY = Math.max(inicio.y, actual.y);
-            for (let y = minY; y <= maxY; y++) {
-              for (let x = minX; x <= maxX; x++) {
-                nuevaSeleccion.add(claveCelda(x, y));
-              }
+            nuevaSeleccion.add(k);
+          }
+        } else {
+          const minX = Math.min(inicio.x, actual.x);
+          const maxX = Math.max(inicio.x, actual.x);
+          const minY = Math.min(inicio.y, actual.y);
+          const maxY = Math.max(inicio.y, actual.y);
+          for (let y = minY; y <= maxY; y++) {
+            for (let x = minX; x <= maxX; x++) {
+              nuevaSeleccion.add(claveCelda(x, y));
             }
           }
+        }
 
-          onCambiarSeleccion(nuevaSeleccion);
-          return null;
-        });
+        onCambiarSeleccionRef.current(nuevaSeleccion);
+        setArrastre(null);
       },
     })
   ).current;
@@ -138,7 +153,7 @@ export default function GrillaEscenario({
                 style={[
                   styles.celda,
                   { width: tamanoCelda, height: tamanoCelda },
-                  seleccionada && styles.celdaSeleccionada,
+                  seleccionada && !chapones && styles.celdaSeleccionada,
                   enPrevisualizacion && !seleccionada && styles.celdaPrevisualizada,
                 ]}
               />
@@ -146,6 +161,29 @@ export default function GrillaEscenario({
           })}
         </View>
       ))}
+
+      {chapones && (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          {chapones.map((ch, i) => {
+            const esDoble = ch.ancho === 2 || ch.alto === 2;
+            return (
+              <View
+                key={`${ch.x},${ch.y}-${i}`}
+                style={[
+                  styles.chapon,
+                  {
+                    left: ch.x * tamanoCelda + ESPACIO_ENTRE_CHAPONES,
+                    top: ch.y * tamanoCelda + ESPACIO_ENTRE_CHAPONES,
+                    width: ch.ancho * tamanoCelda - ESPACIO_ENTRE_CHAPONES * 2,
+                    height: ch.alto * tamanoCelda - ESPACIO_ENTRE_CHAPONES * 2,
+                    backgroundColor: esDoble ? BrandColors.secondary : BrandColors.secondaryLight,
+                  },
+                ]}
+              />
+            );
+          })}
+        </View>
+      )}
     </View>
   );
 }
@@ -154,7 +192,7 @@ const styles = StyleSheet.create({
   grilla: {
     flexDirection: 'column',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#3a3a3a',
     alignSelf: 'center',
   },
   fila: {
@@ -162,13 +200,19 @@ const styles = StyleSheet.create({
   },
   celda: {
     borderWidth: 0.5,
-    borderColor: '#ddd',
-    backgroundColor: '#fafafa',
+    borderColor: '#333',
+    backgroundColor: '#1e1e1e',
   },
   celdaSeleccionada: {
     backgroundColor: BrandColors.secondary,
   },
   celdaPrevisualizada: {
     backgroundColor: BrandColors.secondaryLight,
+  },
+  chapon: {
+    position: 'absolute',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#1e1e1e',
   },
 });

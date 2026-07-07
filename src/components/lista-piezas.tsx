@@ -1,4 +1,5 @@
 import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '../hooks/use-theme';
 import { ResultadoCalculo } from '../logic/tipos';
 
 interface ItemPieza {
@@ -21,6 +22,7 @@ interface ListaPiezasProps {
 }
 
 export default function ListaPiezas({ resultado, imagenes }: ListaPiezasProps) {
+  const theme = useTheme();
   const items: ItemPieza[] = [
     { nombre: 'Chapón 2x1', cantidad: resultado.chapones2x1, imagen: imagenes.chapon2x1 },
     { nombre: 'Chapón 1x1', cantidad: resultado.chapones1x1, imagen: imagenes.chapon1x1 },
@@ -32,10 +34,10 @@ export default function ListaPiezas({ resultado, imagenes }: ListaPiezasProps) {
   return (
     <View style={styles.contenedor}>
       {items.map((item) => (
-        <View key={item.nombre} style={styles.fila}>
+        <View key={item.nombre} style={[styles.fila, { backgroundColor: theme.backgroundElement }]}>
           <Image source={item.imagen} style={styles.imagen} resizeMode="contain" />
-          <Text style={styles.nombre}>{item.nombre}</Text>
-          <Text style={styles.cantidad}>x{item.cantidad}</Text>
+          <Text style={[styles.nombre, { color: theme.text }]}>{item.nombre}</Text>
+          <Text style={[styles.cantidad, { color: theme.text }]}>x{item.cantidad}</Text>
         </View>
       ))}
     </View>
@@ -46,13 +48,13 @@ const styles = StyleSheet.create({
   contenedor: {
     marginTop: 16,
     gap: 8,
+    width: '100%',
   },
   fila: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    backgroundColor: '#f2f2f2',
     borderRadius: 8,
   },
   imagen: {

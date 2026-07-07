@@ -1,19 +1,18 @@
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BrandColors } from '../constants/theme';
+import { useTheme } from '../hooks/use-theme';
 import { calcularPiezas } from '../logic/calcular-piezas';
 import { Celda, ResultadoCalculo } from '../logic/tipos';
 import GrillaEscenario from './grilla-escenario';
 import ListaPiezas from './lista-piezas';
 
-// NOTA: reemplazar por las imágenes reales del proyecto, por ejemplo:
-// chapon2x1: require('../../assets/images/chapon-2x1.png'),
 const IMAGENES_PLACEHOLDER = {
-  chapon2x1: require('../assets/images/chaponIcon.png'),
-  chapon1x1: require('../assets/images/chaponIcon.png'),
-  pata: require('../assets/images/pataIcon.png'),
-  lado2m: require('../assets/images/ladoIcon.png'),
-  lado1m: require('../assets/images/ladoIcon.png'),
+  chapon2x1: require('../../assets/images/chaponIcon.png'),
+  chapon1x1: require('../../assets/images/chaponIcon.png'),
+  pata: require('../../assets/images/pataIcon.png'),
+  lado2m: require('../../assets/images/ladoIcon.png'),
+  lado1m: require('../../assets/images/ladoIcon.png'),
 };
 
 function seleccionACeldas(seleccion: Set<string>): Celda[] {
@@ -24,6 +23,7 @@ function seleccionACeldas(seleccion: Set<string>): Celda[] {
 }
 
 export default function PantallaCalculadora() {
+  const theme = useTheme();
   const [seleccion, setSeleccion] = useState<Set<string>>(new Set());
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null);
 
@@ -39,15 +39,29 @@ export default function PantallaCalculadora() {
     setResultado(null);
   };
 
+  const handleCambiarSeleccion = (nuevaSeleccion: Set<string>) => {
+    setSeleccion(nuevaSeleccion);
+    // Si ya había un resultado calculado, editar la selección lo invalida:
+    // el tiling dibujado en la grilla dejaría de corresponder a lo seleccionado.
+    setResultado(null);
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contenedor}>
-      <Text style={styles.titulo}>Armá el escenario</Text>
-      <Text style={styles.subtitulo}>
+    <ScrollView
+      style={[styles.pantalla, { backgroundColor: theme.background }]}
+      contentContainerStyle={styles.contenedor}
+    >
+      <Text style={[styles.titulo, { color: theme.text }]}>Armá el escenario</Text>
+      <Text style={[styles.subtitulo, { color: theme.textSecondary }]}>
         Tocá una celda para agregarla o quitarla. Arrastrá de una celda a otra para
         seleccionar un rectángulo completo.
       </Text>
 
-      <GrillaEscenario seleccion={seleccion} onCambiarSeleccion={setSeleccion} />
+      <GrillaEscenario
+        seleccion={seleccion}
+        onCambiarSeleccion={handleCambiarSeleccion}
+        chapones={resultado?.detalle.chapones}
+      />
 
       <View style={styles.botones}>
         <Pressable
@@ -72,8 +86,13 @@ export default function PantallaCalculadora() {
 }
 
 const styles = StyleSheet.create({
+  pantalla: {
+    flex: 1,
+  },
   contenedor: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 64,
+    paddingBottom: 16,
     alignItems: 'center',
   },
   titulo: {
@@ -83,7 +102,6 @@ const styles = StyleSheet.create({
   },
   subtitulo: {
     fontSize: 14,
-    color: '#666',
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -101,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: BrandColors.primary,
   },
   botonSecundario: {
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     borderWidth: 1.5,
     borderColor: BrandColors.secondary,
   },
