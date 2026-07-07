@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/images/icon.png" alt="tarimApp" width="120" />
+  <img src="./assets/images/android-icon-foreground.png" alt="tarimApp" width="120" />
 
   # tarimApp
 
