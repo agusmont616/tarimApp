@@ -24,6 +24,13 @@ export const Colors = {
   },
 } as const;
 
+// Colores de marca de la aplicación: negro como principal, naranja como secundario.
+export const BrandColors = {
+  primary: '#000000',
+  secondary: '#FF7A00',
+  secondaryLight: '#FFD9B3',
+} as const;
+
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
