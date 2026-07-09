@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BrandColors } from '../constants/theme';
 import { useTheme } from '../hooks/use-theme';
-import { calcularPiezas } from '../logic/calcular-piezas';
+import { calcularPiezas, detectarRectangulo, generarCeldasRectangulo } from '../logic/calcular-piezas';
 import { Celda, Disponibilidad, ResultadoCalculo } from '../logic/tipos';
 import DisponibilidadPiezas from './disponibilidad-piezas';
-import GrillaEscenario, { claveCelda } from './grilla-escenario';
+import GrillaEscenario, { claveCelda, COLUMNAS, FILAS } from './grilla-escenario';
 import ListaPiezas from './lista-piezas';
+import MedidasEscenario from './medidas-escenario';
 
 const IMAGENES_PLACEHOLDER = {
   chapon2x1: require('../../assets/images/chaponIcon.png'),
@@ -28,6 +29,33 @@ export default function PantallaCalculadora() {
   const [seleccion, setSeleccion] = useState<Set<string>>(new Set());
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null);
   const [disponibilidad, setDisponibilidad] = useState<Disponibilidad>({});
+  const [medidaA, setMedidaA] = useState<number | undefined>(undefined);
+  const [medidaB, setMedidaB] = useState<number | undefined>(undefined);
+  const [formaIrregular, setFormaIrregular] = useState(false);
+
+  // Sincroniza los campos a/b con la selección de la grilla, sea cual sea su
+  // origen (tap/arrastre o "Aplicar medidas"): si la selección forma un
+  // rectángulo perfecto, se reflejan sus medidas; si no, quedan vacíos con
+  // el indicador de forma irregular; si está vacía, se limpian.
+  useEffect(() => {
+    if (seleccion.size === 0) {
+      setMedidaA(undefined);
+      setMedidaB(undefined);
+      setFormaIrregular(false);
+      return;
+    }
+
+    const deteccion = detectarRectangulo(seleccion);
+    if (deteccion.esRectangulo) {
+      setMedidaA(deteccion.a);
+      setMedidaB(deteccion.b);
+      setFormaIrregular(false);
+    } else {
+      setMedidaA(undefined);
+      setMedidaB(undefined);
+      setFormaIrregular(true);
+    }
+  }, [seleccion]);
 
   const hayCeldas = seleccion.size > 0;
 
@@ -46,6 +74,13 @@ export default function PantallaCalculadora() {
     // Si ya había un resultado calculado, editar la selección lo invalida:
     // el tiling dibujado en la grilla dejaría de corresponder a lo seleccionado.
     setResultado(null);
+  };
+
+  const handleAplicarMedidas = () => {
+    if (medidaA === undefined || medidaB === undefined) return;
+    const celdas = generarCeldasRectangulo(medidaA, medidaB);
+    const nuevaSeleccion = new Set(celdas.map((c) => claveCelda(c.x, c.y)));
+    handleCambiarSeleccion(nuevaSeleccion);
   };
 
   const celdasConflictivas = resultado
@@ -68,6 +103,17 @@ export default function PantallaCalculadora() {
         onCambiarSeleccion={handleCambiarSeleccion}
         chapones={resultado?.detalle.chapones}
         celdasConflictivas={celdasConflictivas}
+      />
+
+      <MedidasEscenario
+        a={medidaA}
+        b={medidaB}
+        formaIrregular={formaIrregular}
+        maxA={COLUMNAS}
+        maxB={FILAS}
+        onCambiarA={setMedidaA}
+        onCambiarB={setMedidaB}
+        onAplicar={handleAplicarMedidas}
       />
 
       <DisponibilidadPiezas disponibilidad={disponibilidad} onCambiarDisponibilidad={setDisponibilidad} />

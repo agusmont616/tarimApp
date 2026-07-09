@@ -8,8 +8,10 @@ import {
 import { BrandColors } from '../constants/theme';
 import { Chapon } from '../logic/tipos';
 
-const COLUMNAS = 12; // eje X = "a" = frente/fondo
-const FILAS = 8; // eje Y = "b" = lados
+// Exportadas para que otros componentes (ej. entrada manual de medidas)
+// puedan limitar sus valores al tamaño real de la grilla.
+export const COLUMNAS = 12; // eje X = "a" = frente/fondo
+export const FILAS = 8; // eje Y = "b" = lados
 const ESPACIO_ENTRE_CHAPONES = 2;
 
 interface Punto {

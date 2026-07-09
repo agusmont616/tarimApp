@@ -30,6 +30,47 @@ export function generarCeldasRectangulo(a: number, b: number): Celda[] {
   return celdas;
 }
 
+export type ResultadoDeteccionRectangulo = { esRectangulo: true; a: number; b: number } | { esRectangulo: false };
+
+/**
+ * Determina si una selección de celdas forma un rectángulo perfecto (sin
+ * huecos): todas las celdas entre (minX, minY) y (maxX, maxY) presentes y
+ * ninguna otra. Si lo es, devuelve sus medidas a (ancho) x b (alto).
+ */
+export function detectarRectangulo(seleccion: Celda[] | Set<string>): ResultadoDeteccionRectangulo {
+  const celdas: Celda[] =
+    seleccion instanceof Set
+      ? [...seleccion].map((k) => {
+          const [x, y] = k.split(',');
+          return { x: Number(x), y: Number(y) };
+        })
+      : seleccion;
+
+  if (celdas.length === 0) return { esRectangulo: false };
+
+  const claves = seleccion instanceof Set ? seleccion : new Set(celdas.map((c) => claveCelda(c.x, c.y)));
+
+  const xs = celdas.map((c) => c.x);
+  const ys = celdas.map((c) => c.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+
+  const a = maxX - minX + 1;
+  const b = maxY - minY + 1;
+
+  if (claves.size !== a * b) return { esRectangulo: false };
+
+  for (let y = minY; y <= maxY; y++) {
+    for (let x = minX; x <= maxX; x++) {
+      if (!claves.has(claveCelda(x, y))) return { esRectangulo: false };
+    }
+  }
+
+  return { esRectangulo: true, a, b };
+}
+
 /**
  * Fase 1: decide cómo agrupar las celdas seleccionadas en chapones.
  * Prioridad: 2x1 horizontal > 2x1 vertical (caso borde) > 1x1.
