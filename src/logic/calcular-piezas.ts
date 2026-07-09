@@ -72,8 +72,50 @@ export function detectarRectangulo(seleccion: Celda[] | Set<string>): ResultadoD
 }
 
 /**
+ * Determina si agregar `candidato` a los chapones ya confirmados generaría
+ * una situación de "pata en el medio": el punto medio de alguno de los
+ * lados de 2m (propio o ajeno) coincidiría con una pata aportada por el
+ * otro. Se usa para vetar por anticipado una pareja vertical candidata en
+ * el Paso 2, antes de confirmarla.
+ */
+function generariaPataEnElMedio(candidato: Chapon, confirmados: Chapon[]): boolean {
+  const { lados: ladosCandidato } = extraerPatasYLados([candidato]);
+
+  for (const lado of ladosCandidato.values()) {
+    if (lado.longitud !== 2) continue;
+    const mx = (lado.x1 + lado.x2) / 2;
+    const my = (lado.y1 + lado.y2) / 2;
+    if (confirmados.some((ch) => chaponTienePataEn(ch, mx, my))) return true;
+  }
+
+  for (const ch of confirmados) {
+    const x1 = ch.x;
+    const y1 = ch.y;
+    const x2 = ch.x + ch.ancho;
+    const y2 = ch.y + ch.alto;
+    if (Math.max(ch.ancho, ch.alto) !== 2) continue;
+    const bordes: [number, number, number, number][] = [
+      [x1, y1, x2, y1],
+      [x1, y2, x2, y2],
+      [x1, y1, x1, y2],
+      [x2, y1, x2, y2],
+    ];
+    for (const [bx1, by1, bx2, by2] of bordes) {
+      const longitud = Math.max(Math.abs(bx2 - bx1), Math.abs(by2 - by1));
+      if (longitud !== 2) continue;
+      const mx = (bx1 + bx2) / 2;
+      const my = (by1 + by2) / 2;
+      if (chaponTienePataEn(candidato, mx, my)) return true;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Fase 1: decide cómo agrupar las celdas seleccionadas en chapones.
- * Prioridad: 2x1 horizontal > 2x1 vertical (caso borde) > 1x1.
+ * Prioridad: 2x1 horizontal > 2x1 vertical (caso borde, salvo que genere
+ * "pata en el medio") > 1x1.
  */
 export function calcularTiling(celdas: Celda[]): Chapon[] {
   const set = new Set(celdas.map((c) => claveCelda(c.x, c.y)));
@@ -94,13 +136,18 @@ export function calcularTiling(celdas: Celda[]): Chapon[] {
     }
   }
 
-  // Paso 2: entre las celdas que quedaron sueltas, parejas verticales (caso borde)
+  // Paso 2: entre las celdas que quedaron sueltas, parejas verticales (caso
+  // borde), salvo que la pareja genere una "pata en el medio" contra los
+  // chapones del Paso 1: en ese caso se descarta y las celdas quedan
+  // sueltas para el Paso 3.
   for (const c of ordenadas) {
     const k = claveCelda(c.x, c.y);
     if (usadas.has(k)) continue;
     const kAbajo = claveCelda(c.x, c.y + 1);
     if (set.has(kAbajo) && !usadas.has(kAbajo)) {
-      chapones.push({ x: c.x, y: c.y, ancho: 1, alto: 2 });
+      const candidato: Chapon = { x: c.x, y: c.y, ancho: 1, alto: 2 };
+      if (generariaPataEnElMedio(candidato, chapones)) continue;
+      chapones.push(candidato);
       usadas.add(k);
       usadas.add(kAbajo);
     }
