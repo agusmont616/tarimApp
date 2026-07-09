@@ -10,11 +10,11 @@ import ListaPiezas from './lista-piezas';
 import MedidasEscenario from './medidas-escenario';
 
 const IMAGENES_PLACEHOLDER = {
-  chapon2x1: require('../../assets/images/chaponIcon.png'),
-  chapon1x1: require('../../assets/images/chaponIcon.png'),
-  pata: require('../../assets/images/pataIcon.png'),
-  lado2m: require('../../assets/images/ladoIcon.png'),
-  lado1m: require('../../assets/images/ladoIcon.png'),
+  chapon2x1: require('../../assets/images/ch2x1.png'),
+  chapon1x1: require('../../assets/images/ch1x1.png'),
+  pata: require('../../assets/images/pata.png'),
+  lado2m: require('../../assets/images/ld2m.png'),
+  lado1m: require('../../assets/images/ld1m.png'),
 };
 
 function seleccionACeldas(seleccion: Set<string>): Celda[] {
