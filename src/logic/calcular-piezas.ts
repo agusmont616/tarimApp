@@ -117,32 +117,69 @@ export function extraerPatasYLados(chapones: Chapon[]): {
 }
 
 /**
- * Fase 3: si un lado de 2m tiene, en su punto medio, una pata aportada por
- * otro chapón vecino, ese lado se parte en dos lados de 1m (no se puede
- * apoyar una pata contra la mitad de un lado de 2m).
+ * Fase 3: un lado de 2m es físicamente imposible de construir si, en su
+ * punto medio, hay una pata aportada por otro chapón vecino (no se puede
+ * apoyar una pata contra la mitad de un lado de 2m). En vez de "corregir"
+ * la situación, se detecta y se devuelven las celdas de todos los chapones
+ * involucrados: el dueño del lado de 2m y el/los que aportan la pata en
+ * el medio.
  */
-function dividirLadosSiHacePataEnElMedio(
+function chaponTieneLado(chapon: Chapon, lado: Lado): boolean {
+  const x1 = chapon.x;
+  const y1 = chapon.y;
+  const x2 = chapon.x + chapon.ancho;
+  const y2 = chapon.y + chapon.alto;
+  const bordes: [number, number, number, number][] = [
+    [x1, y1, x2, y1],
+    [x1, y2, x2, y2],
+    [x1, y1, x1, y2],
+    [x2, y1, x2, y2],
+  ];
+  const claveLado = claveArista(lado.x1, lado.y1, lado.x2, lado.y2);
+  return bordes.some(([bx1, by1, bx2, by2]) => claveArista(bx1, by1, bx2, by2) === claveLado);
+}
+
+function chaponTienePataEn(chapon: Chapon, x: number, y: number): boolean {
+  const esquinas: [number, number][] = [
+    [chapon.x, chapon.y],
+    [chapon.x + chapon.ancho, chapon.y],
+    [chapon.x, chapon.y + chapon.alto],
+    [chapon.x + chapon.ancho, chapon.y + chapon.alto],
+  ];
+  return esquinas.some(([ex, ey]) => ex === x && ey === y);
+}
+
+function detectarCeldasConflictivas(
+  chapones: Chapon[],
   lados: Map<string, Lado>,
   patas: Set<string>
-): Map<string, Lado> {
-  const resultado = new Map<string, Lado>();
+): Celda[] {
+  const celdasConflictivas = new Map<string, Celda>();
 
-  for (const [key, lado] of lados) {
-    if (lado.longitud === 2) {
-      const mx = (lado.x1 + lado.x2) / 2;
-      const my = (lado.y1 + lado.y2) / 2;
-      if (patas.has(claveVertice(mx, my))) {
-        const k1 = claveArista(lado.x1, lado.y1, mx, my);
-        const k2 = claveArista(mx, my, lado.x2, lado.y2);
-        resultado.set(k1, { x1: lado.x1, y1: lado.y1, x2: mx, y2: my, longitud: 1 });
-        resultado.set(k2, { x1: mx, y1: my, x2: lado.x2, y2: lado.y2, longitud: 1 });
-        continue;
+  const marcarCeldasDeChapon = (chapon: Chapon) => {
+    for (let dy = 0; dy < chapon.alto; dy++) {
+      for (let dx = 0; dx < chapon.ancho; dx++) {
+        const x = chapon.x + dx;
+        const y = chapon.y + dy;
+        celdasConflictivas.set(claveCelda(x, y), { x, y });
       }
     }
-    resultado.set(key, lado);
+  };
+
+  for (const lado of lados.values()) {
+    if (lado.longitud !== 2) continue;
+    const mx = (lado.x1 + lado.x2) / 2;
+    const my = (lado.y1 + lado.y2) / 2;
+    if (!patas.has(claveVertice(mx, my))) continue;
+
+    for (const chapon of chapones) {
+      if (chaponTieneLado(chapon, lado) || chaponTienePataEn(chapon, mx, my)) {
+        marcarCeldasDeChapon(chapon);
+      }
+    }
   }
 
-  return resultado;
+  return [...celdasConflictivas.values()];
 }
 
 /**
@@ -152,7 +189,7 @@ function dividirLadosSiHacePataEnElMedio(
 export function calcularPiezas(celdas: Celda[]): ResultadoCalculo {
   const chapones = calcularTiling(celdas);
   const { patas, lados } = extraerPatasYLados(chapones);
-  const ladosFinales = dividirLadosSiHacePataEnElMedio(lados, patas);
+  const celdasConflictivas = detectarCeldasConflictivas(chapones, lados, patas);
 
   let chapones2x1 = 0;
   let chapones1x1 = 0;
@@ -163,7 +200,7 @@ export function calcularPiezas(celdas: Celda[]): ResultadoCalculo {
 
   let lados2m = 0;
   let lados1m = 0;
-  for (const lado of ladosFinales.values()) {
+  for (const lado of lados.values()) {
     if (lado.longitud === 2) lados2m++;
     else lados1m++;
   }
@@ -179,10 +216,12 @@ export function calcularPiezas(celdas: Celda[]): ResultadoCalculo {
     patas: patas.size,
     lados2m,
     lados1m,
+    esValido: celdasConflictivas.length === 0,
+    celdasConflictivas,
     detalle: {
       chapones,
       patas: patasDetalle,
-      lados: [...ladosFinales.values()],
+      lados: [...lados.values()],
     },
   };
 }

@@ -5,7 +5,7 @@ import { useTheme } from '../hooks/use-theme';
 import { calcularPiezas } from '../logic/calcular-piezas';
 import { Celda, Disponibilidad, ResultadoCalculo } from '../logic/tipos';
 import DisponibilidadPiezas from './disponibilidad-piezas';
-import GrillaEscenario from './grilla-escenario';
+import GrillaEscenario, { claveCelda } from './grilla-escenario';
 import ListaPiezas from './lista-piezas';
 
 const IMAGENES_PLACEHOLDER = {
@@ -48,6 +48,10 @@ export default function PantallaCalculadora() {
     setResultado(null);
   };
 
+  const celdasConflictivas = resultado
+    ? new Set(resultado.celdasConflictivas.map((c) => claveCelda(c.x, c.y)))
+    : undefined;
+
   return (
     <ScrollView
       style={[styles.pantalla, { backgroundColor: theme.background }]}
@@ -63,6 +67,7 @@ export default function PantallaCalculadora() {
         seleccion={seleccion}
         onCambiarSeleccion={handleCambiarSeleccion}
         chapones={resultado?.detalle.chapones}
+        celdasConflictivas={celdasConflictivas}
       />
 
       <DisponibilidadPiezas disponibilidad={disponibilidad} onCambiarDisponibilidad={setDisponibilidad} />
@@ -84,7 +89,11 @@ export default function PantallaCalculadora() {
         </Pressable>
       </View>
 
-      {resultado && (
+      {resultado && !resultado.esValido && (
+        <Text style={styles.mensajeImposible}>Escenario imposible</Text>
+      )}
+
+      {resultado && resultado.esValido && (
         <ListaPiezas resultado={resultado} imagenes={IMAGENES_PLACEHOLDER} disponibilidad={disponibilidad} />
       )}
     </ScrollView>
@@ -139,5 +148,12 @@ const styles = StyleSheet.create({
   botonTextoSecundario: {
     color: BrandColors.secondary,
     fontWeight: '700',
+  },
+  mensajeImposible: {
+    marginTop: 16,
+    fontSize: 16,
+    fontWeight: '700',
+    color: BrandColors.alert,
+    textAlign: 'center',
   },
 });

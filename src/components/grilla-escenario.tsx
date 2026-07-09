@@ -24,6 +24,9 @@ interface GrillaEscenarioProps {
   // Tiling resultante del cálculo: si viene presente, se dibuja como bloques
   // (uno por chapón) en vez de pintar cada celda seleccionada por separado.
   chapones?: Chapon[];
+  // Celdas de chapones involucrados en un conflicto físico (pata en el medio
+  // de un lado de 2m): se pintan de rojo en vez del color normal.
+  celdasConflictivas?: Set<string>;
 }
 
 export function claveCelda(x: number, y: number): string {
@@ -35,6 +38,7 @@ export default function GrillaEscenario({
   onCambiarSeleccion,
   tamanoCelda = 28,
   chapones,
+  celdasConflictivas,
 }: GrillaEscenarioProps) {
   const contenedorRef = useRef<View>(null);
   const origenPagina = useRef<Punto>({ x: 0, y: 0 });
@@ -147,6 +151,7 @@ export default function GrillaEscenario({
             const k = claveCelda(x, y);
             const seleccionada = seleccion.has(k);
             const enPrevisualizacion = previsualizacion?.has(k) ?? false;
+            const esConflictiva = seleccionada && (celdasConflictivas?.has(k) ?? false);
             return (
               <View
                 key={x}
@@ -155,6 +160,7 @@ export default function GrillaEscenario({
                   { width: tamanoCelda, height: tamanoCelda },
                   seleccionada && !chapones && styles.celdaSeleccionada,
                   enPrevisualizacion && !seleccionada && styles.celdaPrevisualizada,
+                  esConflictiva && styles.celdaConflictiva,
                 ]}
               />
             );
@@ -166,6 +172,7 @@ export default function GrillaEscenario({
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
           {chapones.map((ch, i) => {
             const esDoble = ch.ancho === 2 || ch.alto === 2;
+            const esConflictivo = celdasConflictivas?.has(claveCelda(ch.x, ch.y)) ?? false;
             return (
               <View
                 key={`${ch.x},${ch.y}-${i}`}
@@ -176,7 +183,11 @@ export default function GrillaEscenario({
                     top: ch.y * tamanoCelda + ESPACIO_ENTRE_CHAPONES,
                     width: ch.ancho * tamanoCelda - ESPACIO_ENTRE_CHAPONES * 2,
                     height: ch.alto * tamanoCelda - ESPACIO_ENTRE_CHAPONES * 2,
-                    backgroundColor: esDoble ? BrandColors.secondary : BrandColors.secondaryLight,
+                    backgroundColor: esConflictivo
+                      ? BrandColors.alert
+                      : esDoble
+                      ? BrandColors.secondary
+                      : BrandColors.secondaryLight,
                   },
                 ]}
               />
@@ -208,6 +219,9 @@ const styles = StyleSheet.create({
   },
   celdaPrevisualizada: {
     backgroundColor: BrandColors.secondaryLight,
+  },
+  celdaConflictiva: {
+    backgroundColor: BrandColors.alert,
   },
   chapon: {
     position: 'absolute',

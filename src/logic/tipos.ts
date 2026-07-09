@@ -36,6 +36,13 @@ export interface ResultadoCalculo {
   patas: number;
   lados2m: number;
   lados1m: number;
+  // false si el escenario tiene algún lado de 2m con una pata apoyada en su
+  // punto medio: no se puede construir así en la vida real.
+  esValido: boolean;
+  // Celdas de todos los chapones involucrados en algún conflicto de ese tipo
+  // (el dueño del lado de 2m y el/los que aportan la pata en el medio).
+  // Vacío cuando esValido es true.
+  celdasConflictivas: Celda[];
   // Detalle geométrico, útil para dibujar el resultado o depurar:
   detalle: {
     chapones: Chapon[];
