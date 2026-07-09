@@ -43,3 +43,14 @@ export interface ResultadoCalculo {
     lados: Lado[];
   };
 }
+
+// Cantidad de cada pieza que el usuario tiene disponible en el depósito.
+// Un campo en `undefined` significa que no se cargó dato para esa pieza,
+// por lo que no debe limitarla (no se muestra falta de stock).
+export interface Disponibilidad {
+  chapones2x1?: number;
+  chapones1x1?: number;
+  patas?: number;
+  lados2m?: number;
+  lados1m?: number;
+}

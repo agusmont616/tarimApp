@@ -1,11 +1,13 @@
 import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { BrandColors } from '../constants/theme';
 import { useTheme } from '../hooks/use-theme';
-import { ResultadoCalculo } from '../logic/tipos';
+import { Disponibilidad, ResultadoCalculo } from '../logic/tipos';
 
 interface ItemPieza {
   nombre: string;
   cantidad: number;
   imagen: ImageSourcePropType;
+  disponible?: number;
 }
 
 interface ListaPiezasProps {
@@ -19,27 +21,67 @@ interface ListaPiezasProps {
     lado2m: ImageSourcePropType;
     lado1m: ImageSourcePropType;
   };
+  // Si no se pasa, o si una pieza puntual no tiene valor cargado, no se
+  // muestra ningún mensaje de falta para esa pieza.
+  disponibilidad?: Disponibilidad;
 }
 
-export default function ListaPiezas({ resultado, imagenes }: ListaPiezasProps) {
+export default function ListaPiezas({ resultado, imagenes, disponibilidad }: ListaPiezasProps) {
   const theme = useTheme();
   const items: ItemPieza[] = [
-    { nombre: 'Chapón 2x1', cantidad: resultado.chapones2x1, imagen: imagenes.chapon2x1 },
-    { nombre: 'Chapón 1x1', cantidad: resultado.chapones1x1, imagen: imagenes.chapon1x1 },
-    { nombre: 'Patas', cantidad: resultado.patas, imagen: imagenes.pata },
-    { nombre: 'Lados de 2m', cantidad: resultado.lados2m, imagen: imagenes.lado2m },
-    { nombre: 'Lados de 1m', cantidad: resultado.lados1m, imagen: imagenes.lado1m },
+    {
+      nombre: 'Chapón 2x1',
+      cantidad: resultado.chapones2x1,
+      imagen: imagenes.chapon2x1,
+      disponible: disponibilidad?.chapones2x1,
+    },
+    {
+      nombre: 'Chapón 1x1',
+      cantidad: resultado.chapones1x1,
+      imagen: imagenes.chapon1x1,
+      disponible: disponibilidad?.chapones1x1,
+    },
+    { nombre: 'Patas', cantidad: resultado.patas, imagen: imagenes.pata, disponible: disponibilidad?.patas },
+    {
+      nombre: 'Lados de 2m',
+      cantidad: resultado.lados2m,
+      imagen: imagenes.lado2m,
+      disponible: disponibilidad?.lados2m,
+    },
+    {
+      nombre: 'Lados de 1m',
+      cantidad: resultado.lados1m,
+      imagen: imagenes.lado1m,
+      disponible: disponibilidad?.lados1m,
+    },
   ].filter((item) => item.cantidad > 0);
 
   return (
     <View style={styles.contenedor}>
-      {items.map((item) => (
-        <View key={item.nombre} style={[styles.fila, { backgroundColor: theme.backgroundElement }]}>
-          <Image source={item.imagen} style={styles.imagen} resizeMode="contain" />
-          <Text style={[styles.nombre, { color: theme.text }]}>{item.nombre}</Text>
-          <Text style={[styles.cantidad, { color: theme.text }]}>x{item.cantidad}</Text>
-        </View>
-      ))}
+      {items.map((item) => {
+        const faltan =
+          item.disponible !== undefined && item.cantidad > item.disponible
+            ? item.cantidad - item.disponible
+            : null;
+
+        return (
+          <View
+            key={item.nombre}
+            style={[
+              styles.fila,
+              { backgroundColor: theme.backgroundElement },
+              faltan !== null && styles.filaConFalta,
+            ]}
+          >
+            <Image source={item.imagen} style={styles.imagen} resizeMode="contain" />
+            <Text style={[styles.nombre, { color: theme.text }]}>{item.nombre}</Text>
+            <View style={styles.cantidades}>
+              <Text style={[styles.cantidad, { color: theme.text }]}>x{item.cantidad}</Text>
+              {faltan !== null && <Text style={styles.faltan}>Faltan {faltan}</Text>}
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -57,6 +99,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
   },
+  filaConFalta: {
+    borderWidth: 1.5,
+    borderColor: BrandColors.alert,
+  },
   imagen: {
     width: 40,
     height: 40,
@@ -66,8 +112,17 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
   },
+  cantidades: {
+    alignItems: 'flex-end',
+  },
   cantidad: {
     fontSize: 16,
     fontWeight: '700',
+  },
+  faltan: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: BrandColors.alert,
+    marginTop: 2,
   },
 });

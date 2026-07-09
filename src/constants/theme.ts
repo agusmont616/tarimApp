@@ -28,6 +28,7 @@ export const BrandColors = {
   primary: '#000000',
   secondary: '#FF7A00',
   secondaryLight: '#FFD9B3',
+  alert: '#FF4D4D',
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;

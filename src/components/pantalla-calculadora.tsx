@@ -3,7 +3,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BrandColors } from '../constants/theme';
 import { useTheme } from '../hooks/use-theme';
 import { calcularPiezas } from '../logic/calcular-piezas';
-import { Celda, ResultadoCalculo } from '../logic/tipos';
+import { Celda, Disponibilidad, ResultadoCalculo } from '../logic/tipos';
+import DisponibilidadPiezas from './disponibilidad-piezas';
 import GrillaEscenario from './grilla-escenario';
 import ListaPiezas from './lista-piezas';
 
@@ -26,6 +27,7 @@ export default function PantallaCalculadora() {
   const theme = useTheme();
   const [seleccion, setSeleccion] = useState<Set<string>>(new Set());
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null);
+  const [disponibilidad, setDisponibilidad] = useState<Disponibilidad>({});
 
   const hayCeldas = seleccion.size > 0;
 
@@ -63,6 +65,8 @@ export default function PantallaCalculadora() {
         chapones={resultado?.detalle.chapones}
       />
 
+      <DisponibilidadPiezas disponibilidad={disponibilidad} onCambiarDisponibilidad={setDisponibilidad} />
+
       <View style={styles.botones}>
         <Pressable
           style={[styles.boton, styles.botonSecundario]}
@@ -80,7 +84,9 @@ export default function PantallaCalculadora() {
         </Pressable>
       </View>
 
-      {resultado && <ListaPiezas resultado={resultado} imagenes={IMAGENES_PLACEHOLDER} />}
+      {resultado && (
+        <ListaPiezas resultado={resultado} imagenes={IMAGENES_PLACEHOLDER} disponibilidad={disponibilidad} />
+      )}
     </ScrollView>
   );
 }
