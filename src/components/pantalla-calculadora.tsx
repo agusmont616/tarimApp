@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BrandColors } from '../constants/theme';
+import { useDisponibilidadPersistida } from '../hooks/use-disponibilidad-persistida';
 import { useTheme } from '../hooks/use-theme';
 import { calcularPiezas, detectarRectangulo, generarCeldasRectangulo } from '../logic/calcular-piezas';
-import { Celda, Disponibilidad, ResultadoCalculo } from '../logic/tipos';
+import { Celda, ResultadoCalculo } from '../logic/tipos';
 import DisponibilidadPiezas from './disponibilidad-piezas';
 import GrillaEscenario, { claveCelda, COLUMNAS, FILAS } from './grilla-escenario';
 import ListaPiezas from './lista-piezas';
@@ -28,7 +29,7 @@ export default function PantallaCalculadora() {
   const theme = useTheme();
   const [seleccion, setSeleccion] = useState<Set<string>>(new Set());
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null);
-  const [disponibilidad, setDisponibilidad] = useState<Disponibilidad>({});
+  const { disponibilidad, setDisponibilidad, cargado: disponibilidadCargada } = useDisponibilidadPersistida();
   const [medidaA, setMedidaA] = useState<number | undefined>(undefined);
   const [medidaB, setMedidaB] = useState<number | undefined>(undefined);
   const [formaIrregular, setFormaIrregular] = useState(false);
@@ -61,7 +62,7 @@ export default function PantallaCalculadora() {
 
   const handleCalcular = () => {
     const celdas = seleccionACeldas(seleccion);
-    setResultado(calcularPiezas(celdas));
+    setResultado(calcularPiezas(celdas, disponibilidad));
   };
 
   const handleLimpiar = () => {
@@ -116,7 +117,9 @@ export default function PantallaCalculadora() {
         onAplicar={handleAplicarMedidas}
       />
 
-      <DisponibilidadPiezas disponibilidad={disponibilidad} onCambiarDisponibilidad={setDisponibilidad} />
+      {disponibilidadCargada && (
+        <DisponibilidadPiezas disponibilidad={disponibilidad} onCambiarDisponibilidad={setDisponibilidad} />
+      )}
 
       <View style={styles.botones}>
         <Pressable

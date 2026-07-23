@@ -1,4 +1,4 @@
-import { Celda, Chapon, Lado, Pata, ResultadoCalculo } from './tipos';
+import { Celda, Chapon, Disponibilidad, Lado, Pata, ResultadoCalculo } from './tipos';
 
 function claveCelda(x: number, y: number): string {
   return `${x},${y}`;
@@ -165,6 +165,54 @@ export function calcularTiling(celdas: Celda[]): Chapon[] {
 }
 
 /**
+ * Divide un chapón 2x1 en dos 1x1 que ocupan las mismas celdas.
+ */
+function dividirChapon(chapon: Chapon): [Chapon, Chapon] {
+  if (chapon.ancho === 2) {
+    return [
+      { x: chapon.x, y: chapon.y, ancho: 1, alto: 1 },
+      { x: chapon.x + 1, y: chapon.y, ancho: 1, alto: 1 },
+    ];
+  }
+  return [
+    { x: chapon.x, y: chapon.y, ancho: 1, alto: 1 },
+    { x: chapon.x, y: chapon.y + 1, ancho: 1, alto: 1 },
+  ];
+}
+
+/**
+ * Cuando el tiling necesita más chapones 2x1 que los disponibles en
+ * depósito, reemplaza los que sobran por parejas de 1x1 en las mismas
+ * celdas. Solo afecta qué se reporta como pieza (cantidades y dibujo en la
+ * grilla): el marco físico (patas y lados, Fase 2/3) se calcula aparte
+ * sobre el tiling original, sin este reemplazo, porque dos 1x1 que ocupan
+ * las celdas de un 2x1 se apoyan en el mismo marco que ese 2x1 hubiera
+ * usado — no hace falta una pata donde se tocan.
+ */
+function respetarLimiteChapones2x1(chapones: Chapon[], limite: number | undefined): Chapon[] {
+  if (limite === undefined) return chapones;
+
+  const indicesDobles = chapones
+    .map((_, i) => i)
+    .filter((i) => chapones[i].ancho === 2 || chapones[i].alto === 2);
+
+  const sobrantes = indicesDobles.length - limite;
+  if (sobrantes <= 0) return chapones;
+
+  const aDividir = new Set(indicesDobles.slice(indicesDobles.length - sobrantes));
+
+  const resultado: Chapon[] = [];
+  chapones.forEach((ch, i) => {
+    if (aDividir.has(i)) {
+      resultado.push(...dividirChapon(ch));
+    } else {
+      resultado.push(ch);
+    }
+  });
+  return resultado;
+}
+
+/**
  * Fase 2: a partir de los chapones, extrae patas (deduplicadas) y lados (deduplicados).
  */
 export function extraerPatasYLados(chapones: Chapon[]): {
@@ -273,11 +321,15 @@ function detectarCeldasConflictivas(
 /**
  * Punto de entrada principal: recibe la selección de celdas (rectángulo
  * a x b, o forma irregular) y devuelve la lista de piezas necesarias.
+ * Si se pasa `disponibilidad`, los chapones 2x1 que excedan el stock se
+ * completan con 1x1 (ver `respetarLimiteChapones2x1`).
  */
-export function calcularPiezas(celdas: Celda[]): ResultadoCalculo {
-  const chapones = calcularTiling(celdas);
-  const { patas, lados } = extraerPatasYLados(chapones);
-  const celdasConflictivas = detectarCeldasConflictivas(chapones, lados, patas);
+export function calcularPiezas(celdas: Celda[], disponibilidad?: Disponibilidad): ResultadoCalculo {
+  const chaponesFrame = calcularTiling(celdas);
+  const { patas, lados } = extraerPatasYLados(chaponesFrame);
+  const celdasConflictivas = detectarCeldasConflictivas(chaponesFrame, lados, patas);
+
+  const chapones = respetarLimiteChapones2x1(chaponesFrame, disponibilidad?.chapones2x1);
 
   let chapones2x1 = 0;
   let chapones1x1 = 0;
